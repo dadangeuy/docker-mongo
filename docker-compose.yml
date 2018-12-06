@@ -1,0 +1,42 @@
+version: '3.2'
+services:
+  # Mongos Server
+  mongos:
+    container_name: mongos
+    image: mongo
+    depends_on:
+      - mongo-config
+    command: mongos --configdb config/mongo-config:27017 --bind_ip 0.0.0.0 --port 27017
+    expose:
+      - '27017'
+    ports:
+      - 27017:27017
+
+  # Config Server
+  mongo-config:
+    container_name: mongo-config
+    image: mongo
+    command: mongod --configsvr --replSet config --dbpath /data/db --port 27017
+    expose:
+      - '27017'
+
+  # Shard Server
+  mongo-shard-1:
+    container_name: mongo-shard-1
+    image: mongo
+    command: mongod --shardsvr --replSet shard-1 --dbpath /data/db --port 27017
+    expose:
+      - '27017'
+  mongo-shard-2:
+    container_name: mongo-shard-2
+    image: mongo
+    command: mongod --shardsvr --replSet shard-2 --dbpath /data/db --port 27017
+    expose:
+      - '27017'
+  mongo-shard-3:
+    container_name: mongo-shard-3
+    image: mongo
+    command: mongod --shardsvr --replSet shard-3 --dbpath /data/db --port 27017
+    expose:
+      - '27017'
+
